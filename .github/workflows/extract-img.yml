@@ -37,20 +37,20 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        wget ${{ github.event.inputs.img_url }} -O openwrt/file.img.gz
+        sudo wget ${{ github.event.inputs.img_url }} -O openwrt/file.img.gz
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Extract firmware
       id: extract
       run: |
         cd openwrt
-        mkdir -p boot rootfs img
-        gunzip file.gz
-        los=$(losetup -fP --show file.img)
-        mount ${los}p1 boot
-        mount ${los}p2 rootfs
-        (cd boot && tar cvfz ../img/boot.tar.gz *)
-        (cd rootfs && tar cvcz ../img/rootfs.tar.gz *)
+        sudo mkdir -p boot rootfs img
+        sudo gunzip file.gz
+        los=$(sudo losetup -fP --show file.img)
+        sudo mount ${los}p1 boot
+        sudo mount ${los}p2 rootfs
+        (cd boot && sudo tar cvfz ../img/boot.tar.gz *)
+        (cd rootfs && sudo tar cvcz ../img/rootfs.tar.gz *)
         echo "::set-output name=status::success"
         
     - name: Check space usage
