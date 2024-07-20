@@ -37,7 +37,8 @@ jobs:
         sudo -E apt-get -y install wget python3
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
-        sudo pip install gdown
+        sudo pip3 install gdown
+        sudo pip3 install git+https://github.com/Juvenal-Yescas/mediafire-dl
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir/openwrt
         sudo chown $USER:$GROUPS /workdir
@@ -54,7 +55,11 @@ jobs:
           fi
           sudo gdown ${link_gdrive} -O openwrt/file.${{ github.event.inputs.type_file }}
         else
-          sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
+          if [ $(echo ${{ github.event.input.img_url }} | grep "mediafire.com") ]; then
+            sudo mediafire-dl ${{ github.event.input.img_url }} -o openwrt/file.${{ github.event.input.type_file }}
+          else
+            sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
+          fi
         fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
