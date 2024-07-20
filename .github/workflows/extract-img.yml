@@ -46,8 +46,13 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        if [ $(echo ${{ github.event.inputs.img_url }} | grep "drive.google.com") ]; then
-          sudo gdown ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
+        if [ $(echo ${{ github.event.inputs.img_url }} | grep "drive.") ]; then
+          if [ $(echo ${{ github.event.inputs.img_url }} | awk -F "/" '{print $6}') ]; then
+            link_gdrive=$(echo ${{ github.event.inputs.img_url }} | awk -F "/" '{print $6}')
+          else
+            link_gdrive=$(echo ${{ github.event.inputs.img_url }} | awk -F "/" '{print $4}' | awk -F "?id=" '{print $2}'|awk -F "&export" '{print $1}')
+          fi
+          sudo gdown ${link_gdrive} -O openwrt/file.${{ github.event.inputs.type_file }}
         else
           sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
         fi
