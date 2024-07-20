@@ -4,6 +4,14 @@ on:
   repository_dispatch:
   workflow_dispatch:
     inputs:
+      type_file:
+        description: "Select type file"
+        required: false
+        default: "img.gz"
+        type: choice
+        options:
+          - img.xz
+          - img.gz
       img_url:
         description: "Set the url img file"
         required: true
@@ -33,11 +41,11 @@ jobs:
         sudo mkdir -p /workdir/openwrt
         sudo chown $USER:$GROUPS /workdir
 
-    - name: Download file img.gz
+    - name: Download file ${{ github.event.inputs.type_file }}
       working-directory: /workdir
       run: |
         df -hT $PWD
-        sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.img.xz
+        sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Extract firmware
@@ -45,7 +53,11 @@ jobs:
       run: |
         cd openwrt
         sudo mkdir -p boot rootfs img
-        sudo unxz file.img.xz
+        if [ ${{ github.event.inputs.type_file }} = "img.gz" ]; then
+          sudo gunzip file.img.gz
+        else
+          sudo unxz file.img.xz
+        fi
         los=$(sudo losetup -fP --show file.img)
         sudo mount ${los}p1 boot
         sudo mount ${los}p2 rootfs
