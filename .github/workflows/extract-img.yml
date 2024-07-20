@@ -37,7 +37,7 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.img.gz
+        sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.img.xz
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Extract firmware
@@ -45,7 +45,7 @@ jobs:
       run: |
         cd openwrt
         sudo mkdir -p boot rootfs img
-        sudo gunzip file.img.gz
+        sudo unxz file.img.xz
         los=$(sudo losetup -fP --show file.img)
         sudo mount ${los}p1 boot
         sudo mount ${los}p2 rootfs
