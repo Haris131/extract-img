@@ -47,6 +47,7 @@ jobs:
         sudo mkdir -p boot rootfs img
         sudo gunzip file.img.gz
         los=$(sudo losetup -fP --show file.img)
+        lsblk
         sudo mount ${los}p1 boot
         sudo mount ${los}p2 rootfs
         (cd boot && sudo tar cvfz ../img/boot.tar.gz *)
