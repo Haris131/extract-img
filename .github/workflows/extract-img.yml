@@ -55,8 +55,8 @@ jobs:
           fi
           sudo gdown ${link_gdrive} -O openwrt/file.${{ github.event.inputs.type_file }}
         else
-          if [ $(echo ${{ github.event.input.img_url }} | grep "mediafire.com") ]; then
-            sudo mediafire-dl ${{ github.event.input.img_url }} -o openwrt/file.${{ github.event.input.type_file }}
+          if [ $(echo ${{ github.event.inputs.img_url }} | grep "mediafire.com") ]; then
+            sudo mediafire-dl ${{ github.event.inputs.img_url }} -o openwrt/file.${{ github.event.inputs.type_file }}
           else
             sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
           fi
