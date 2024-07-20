@@ -37,7 +37,7 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        wget ${{ github.event.inputs.config }} -O openwrt/file.img.gz
+        wget ${{ github.event.inputs.img_url }} -O openwrt/file.img.gz
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Extract firmware
