@@ -46,7 +46,7 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        if [ $(grep "drive.google.com" ${{ github.event.inputs.img_url }}) ]; then
+        if [ $(echo ${{ github.event.inputs.img_url }} | grep "drive.google.com") ]; then
           sudo gdown ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
         else
           sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
