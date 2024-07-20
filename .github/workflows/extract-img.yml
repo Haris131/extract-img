@@ -34,9 +34,10 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -y install wget
+        sudo -E apt-get -y install wget python3
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
+        sudo pip install gdown
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir/openwrt
         sudo chown $USER:$GROUPS /workdir
@@ -45,7 +46,11 @@ jobs:
       working-directory: /workdir
       run: |
         df -hT $PWD
-        sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
+        if [ $(grep "drive.google.com" ${{ github.event.inputs.img_url }}) ]; then
+          sudo gdown ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
+        else
+          sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
+        fi
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Extract firmware
