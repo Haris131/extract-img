@@ -33,11 +33,11 @@ jobs:
         sudo mkdir -p /workdir/openwrt
         sudo chown $USER:$GROUPS /workdir
 
-    - name: Clone source code
+    - name: Download file img.gz
       working-directory: /workdir
       run: |
         df -hT $PWD
-        sudo wget ${{ github.event.inputs.img_url }} -O openwrt/file.img.gz
+        sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.img.gz
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Extract firmware
