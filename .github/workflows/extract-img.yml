@@ -45,7 +45,7 @@ jobs:
       run: |
         cd openwrt
         sudo mkdir -p boot rootfs img
-        sudo gunzip file.gz
+        sudo gunzip file.img.gz
         los=$(sudo losetup -fP --show file.img)
         sudo mount ${los}p1 boot
         sudo mount ${los}p2 rootfs
