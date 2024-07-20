@@ -26,7 +26,7 @@ jobs:
       run: |
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
         sudo -E apt-get -qq update
-        sudo -E apt-get -y install lolcat build-essential clang flex bison g++ gawk gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget
+        sudo -E apt-get -y install wget
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean
         sudo timedatectl set-timezone "$TZ"
@@ -47,7 +47,6 @@ jobs:
         sudo mkdir -p boot rootfs img
         sudo gunzip file.img.gz
         los=$(sudo losetup -fP --show file.img)
-        lsblk
         sudo mount ${los}p1 boot
         sudo mount ${los}p2 rootfs
         (cd boot && sudo tar cvfz ../img/boot.tar.gz *)
