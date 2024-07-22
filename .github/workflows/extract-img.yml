@@ -84,12 +84,19 @@ jobs:
       if: (!cancelled())
       run: df -hT
 
-    - name: Upload tar directory
+    - name: Upload boot.tar.gz
       uses: actions/upload-artifact@main
       if: steps.extract.outputs.status == 'success'
       with:
-        name: openwrt
-        path: openwrt/img
+        name: boot.tar.gz
+        path: openwrt/img/boot.tar.gz
+
+    - name: Upload rootfs.tar.gz
+      uses: actions/upload-artifact@main
+      if: steps.extract.outputs.status == 'success'
+      with:
+        name: rootfs.tar.gz
+        path: openwrt/img/rootfs.tar.gz
 
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
