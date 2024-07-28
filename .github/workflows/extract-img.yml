@@ -58,7 +58,8 @@ jobs:
           if [ $(echo ${{ github.event.inputs.img_url }} | grep "mediafire.com") ]; then
             sudo mediafire-dl ${{ github.event.inputs.img_url }} -o openwrt/file.${{ github.event.inputs.type_file }}
           elif [ $(echo ${{ github.event.inputs.img_url }} | grep "mega.nz") ]; then
-            sudo megadl ${{ github.event.inputs.img_url }} -o openwrt/file.${{ github.event.inputs.type_file }}
+            mega=$(sudo megadl ${{ github.event.inputs.img_url }})
+            sudo mv ${mega} openwrt/file.${{ github.event.inputs.type_file }}
           else
             sudo wget --no-check-certificate ${{ github.event.inputs.img_url }} -O openwrt/file.${{ github.event.inputs.type_file }}
           fi
