@@ -60,6 +60,8 @@ jobs:
           else
             if [ $(echo ${{ github.event.inputs.img_url }} | grep "mega.nz") ]; then
               sudo megadl ${{ github.event.inputs.img_url }}
+              ls
+              pwd
               sudo tar xvfz *.tar.xz
               sudo xz -z *.img
               sudo mv *${{ github.event.inputs.type_file }} openwrt/file.${{ github.event.inputs.type_file }}
