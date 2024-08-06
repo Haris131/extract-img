@@ -57,7 +57,7 @@ jobs:
           sudo gdown ${link_gdrive} -O openwrt/file.${{ github.event.inputs.type_file }}
         else
           if [ $(echo ${{ github.event.inputs.img_url }} | grep "mediafire.com") ]; then
-            link_mediafire=$(echo ${{ github.event.inputs.img_url }} | awk -F "/file[?]dkey" '{print $1}')
+            link_mediafire=$(echo ${{ github.event.inputs.img_url }} | awk -F "[?]dkey" '{print $1}')
             sudo mediafire-dl ${link_mediafire} -o openwrt/file.${{ github.event.inputs.type_file }}
           else
             if [ $(echo ${{ github.event.inputs.img_url }} | grep "mega.nz") ]; then
