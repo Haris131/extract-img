@@ -85,8 +85,7 @@ jobs:
         fi
         los=$(sudo losetup -fP --show file.img)
         sudo mount ${los}p2 rootfs
-        (cd rootfs && sudo tar cfz /workdir/openwrt/img/rootfs.tar.gz *)
-        mv /workdir/openwrt/img/rootfs.tar.gz /workdir/openwrt/img/${{ inputs.rename_rootfs }}.tar.gz
+        (cd rootfs && sudo tar cfz /workdir/openwrt/img/${{ inputs.rename_rootfs }}.tar.gz *)
         echo "::set-output name=status::success"
         
     - name: Check space usage
