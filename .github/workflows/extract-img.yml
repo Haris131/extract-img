@@ -98,7 +98,7 @@ jobs:
         path: openwrt/img/boot.tar.gz
 
     - name: Upload rootfs.tar.gz
-      uses: actions/upload-artifact@main
+      uses: actions/upload-artifact@v1
       if: steps.extract.outputs.status == 'success'
       with:
         name: rootfs.tar.gz
