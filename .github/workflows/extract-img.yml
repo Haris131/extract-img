@@ -105,10 +105,12 @@ jobs:
         path: openwrt/img/rootfs.tar.gz
 
     - name: Upload firmware to release
-      uses: svenstaro/upload-release-action@v2
+      uses: softprops/action-gh-release@master
+      if: steps.tag.extract.status == 'success'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./openwrt/img/*
-        tag: extract-img
+        tag_name: extract-img
+        files: openwrt/img/*
         file_glob: true
         overwrite: true
