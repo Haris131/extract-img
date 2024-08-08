@@ -105,7 +105,7 @@ jobs:
         path: openwrt/img/rootfs.tar.gz
 
     - name: Upload firmware to release
-      uses: uses: ncipollo/release-action@main
+      uses: ncipollo/release-action@main
       if: steps.extract.outputs.status == 'success'
       with:
         tag: Extract IMG
