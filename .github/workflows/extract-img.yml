@@ -112,5 +112,3 @@ jobs:
       with:
         tag_name: extract-img
         files: openwrt/img/*
-        file_glob: true
-        overwrite: true
