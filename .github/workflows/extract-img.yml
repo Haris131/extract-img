@@ -105,12 +105,10 @@ jobs:
         path: openwrt/img/rootfs.tar.gz
 
     - name: Upload firmware to release
-      uses: ncipollo/release-action@main
+      uses: softprops/action-gh-release@master
       if: steps.extract.outputs.status == 'success'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag: Extract IMG
-        artifacts: openwrt/img/*
-        allowUpdates: true
-        removeArtifacts: false
-        replacesArtifacts: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: extract-img
+        files: openwrt/img/*
