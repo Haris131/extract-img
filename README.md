@@ -24,8 +24,6 @@ file rootfs yang sudah diextract akan diupload di-tap releases seperti digambar 
 langsung bisa dideploy menggunakan ulo-builder
 
 Silahkan difork digithub masing"
-https://github*com/edikurexe/extract-img
-(ganti * dengan . ) kalo share link kebegal Mark Zuckerberg
 
 # Credits
  * [gdown](https://github.com/wkentaro/gdown)
