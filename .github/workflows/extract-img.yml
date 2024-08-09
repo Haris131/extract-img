@@ -16,6 +16,10 @@ on:
         description: "Set the url img file"
         required: true
         default: ""
+      rename_rootfs:
+        description: "Rename rootfs"
+        required: true
+        default: ""
 
 env:
   TZ: Asia/Jakarta
@@ -80,35 +84,27 @@ jobs:
           sudo unxz file.img.xz
         fi
         los=$(sudo losetup -fP --show file.img)
-        sudo mount ${los}p1 boot
         sudo mount ${los}p2 rootfs
-        (cd boot && sudo tar cfz /workdir/openwrt/img/boot.tar.gz *)
-        (cd rootfs && sudo tar cfz /workdir/openwrt/img/rootfs.tar.gz *)
+        (cd rootfs && sudo tar cfz /workdir/openwrt/img/${{ inputs.rename_rootfs }}.tar.gz *)
         echo "::set-output name=status::success"
         
     - name: Check space usage
       if: (!cancelled())
       run: df -hT
 
-    - name: Upload boot.tar.gz
-      uses: actions/upload-artifact@main
-      if: steps.extract.outputs.status == 'success'
+    - name: Upload release asset
+      uses: svenstaro/upload-release-action@v2
       with:
-        name: boot.tar.gz
-        path: openwrt/img/boot.tar.gz
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: openwrt/img/*
+        tag: ${{ github.ref }}
+        file_glob: true
+        overwrite: true
+        body: |
+          ##  KUMPULAN HASIL EXTRACT ROOTFS
 
-    - name: Upload rootfs.tar.gz
-      uses: actions/upload-artifact@v1
-      if: steps.extract.outputs.status == 'success'
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
       with:
-        name: rootfs.tar.gz
-        path: openwrt/img/rootfs.tar.gz
-
-    - name: Upload firmware to release
-      uses: softprops/action-gh-release@master
-      if: steps.extract.outputs.status == 'success'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: extract-img
-        files: openwrt/img/*
+        retain_days: 1
+        keep_minimum_runs: 3
