@@ -93,7 +93,9 @@ jobs:
         sudo mount ${los}p2 rootfs
         (cd boot && sudo tar cfz /workdir/openwrt/img/${{ inputs.rename }}-boot.tar.gz *)
         (cd rootfs && sudo tar cfz /workdir/openwrt/img/${{ inputs.rename }}-rootfs.tar.gz *)
+        echo "PACKAGED_OUTPUTTAGS=${{ inputs.rename }}" >> ${GITHUB_ENV}
         echo "PACKAGED_OUTPUTPATH=${PWD}/img" >> ${GITHUB_ENV}
+        echo "PACKAGED_OUTPUTDATE=$(date +"%m.%d.%H%M")" >> ${GITHUB_ENV}
         echo "PACKAGED_STATUS=success" >> ${GITHUB_ENV}
 
     - name: Upload ${{ inputs.rename }}-boot.tar.gz
@@ -114,7 +116,7 @@ jobs:
       uses: ncipollo/release-action@main
       if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
       with:
-        tag: extract_img
+        tag: extract-img
         artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
         allowUpdates: true
         removeArtifacts: false
