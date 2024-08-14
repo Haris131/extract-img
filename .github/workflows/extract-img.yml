@@ -103,7 +103,7 @@ jobs:
         path: /workdir/openwrt/img/boot-${{ inputs.rename }}.tar.gz
 
     - name: Upload rootfs-${{ inputs.rename }}.tar.gz
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@main
       if: ${{ env.PACKAGED_STATUS }} == 'success'
       with:
         name: rootfs-${{ inputs.rename }}.tar.gz
