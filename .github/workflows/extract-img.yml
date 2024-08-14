@@ -100,21 +100,21 @@ jobs:
       if: ${{ env.PACKAGED_STATUS }} == 'success'
       with:
         name: boot-${{ inputs.rename }}.tar.gz
-        path: openwrt/img/boot-${{ inputs.rename }}.tar.gz
+        path: /workdir/openwrt/img/boot-${{ inputs.rename }}.tar.gz
 
     - name: Upload rootfs-${{ inputs.rename }}.tar.gz
       uses: actions/upload-artifact@v1
       if: ${{ env.PACKAGED_STATUS }} == 'success'
       with:
         name: rootfs-${{ inputs.rename }}.tar.gz
-        path: openwrt/img/rootfs-${{ inputs.rename }}.tar.gz
+        path: /workdir/openwrt/img/rootfs-${{ inputs.rename }}.tar.gz
 
     - name: Upload boot & rootfs to Release
       uses: ncipollo/release-action@main
       if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
       with:
         tag: extract-img
-        artifacts: openwrt/img/*
+        artifacts: /workdir/openwrt/img/*
         allowUpdates: true
         removeArtifacts: false
         replacesArtifacts: true
