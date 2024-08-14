@@ -16,8 +16,8 @@ on:
         description: "Set the url img file"
         required: true
         default: ""
-      rename_rootfs:
-        description: "Rename rootfs"
+      rename:
+        description: "Set the boot & rootfs name"
         required: true
         default: ""
 
@@ -84,27 +84,39 @@ jobs:
           sudo unxz file.img.xz
         fi
         los=$(sudo losetup -fP --show file.img)
+        sudo mount ${los}p1 boot
         sudo mount ${los}p2 rootfs
-        (cd rootfs && sudo tar cfz /workdir/openwrt/img/${{ inputs.rename_rootfs }}.tar.gz *)
+        (cd boot && sudo tar cfz /workdir/openwrt/img/boot-${{ github.event.inputs.rename }}.tar.gz *)
+        (cd rootfs && sudo tar cfz /workdir/openwrt/img/rootfs-${{ github.event.inputs.rename }}.tar.gz *)
         echo "::set-output name=status::success"
         
     - name: Check space usage
       if: (!cancelled())
       run: df -hT
 
-    - name: Upload release asset
-      uses: svenstaro/upload-release-action@v2
+    - name: Upload boot-${{ github.event.inputs.rename }}.tar.gz
+      uses: actions/upload-artifact@main
+      if: steps.extract.outputs.status == 'success'
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: openwrt/img/*
-        tag: ${{ github.ref }}
-        file_glob: true
-        overwrite: true
-        body: |
-          ##  KUMPULAN HASIL EXTRACT ROOTFS
+        name: boot-${{ github.event.inputs.rename }}.tar.gz
+        path: openwrt/img/boot-${{ github.event.inputs.rename }}.tar.gz
 
-    - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
+    - name: Upload rootfs-${{ github.event.inputs.rename }}.tar.gz
+      uses: actions/upload-artifact@v1
+      if: steps.extract.outputs.status == 'success'
       with:
-        retain_days: 1
-        keep_minimum_runs: 3
+        name: rootfs-${{ github.event.inputs.rename }}.tar.gz
+        path: openwrt/img/rootfs-${{ github.event.inputs.rename }}.tar.gz
+
+    - name: Upload boot & rootfs to Release
+      uses: ncipollo/release-action@main
+      if: steps.extract.outputs.status == 'success' && !cancelled()
+      with:
+        tag: extract-img
+        artifacts: openwrt/img/*
+        allowUpdates: true
+        removeArtifacts: false
+        replacesArtifacts: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        body: |
+          boot & rootfs files
