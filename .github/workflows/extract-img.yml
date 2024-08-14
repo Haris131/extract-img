@@ -12,7 +12,7 @@ on:
       type_file:
         description: "Select type file"
         required: false
-        default: "img.gz"
+        default: "img.xz"
         type: choice
         options:
           - img.xz
