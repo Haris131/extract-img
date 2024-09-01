@@ -118,6 +118,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.PACKAGED_OUTPUTDATE }}
+        tag_name: extract-img
         files: ${{ env.PACKAGED_OUTPUTPATH }}/*
         body: boot & rootfs
