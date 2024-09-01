@@ -94,7 +94,7 @@ jobs:
         (cd boot && sudo tar cfz /workdir/openwrt/img/${{ inputs.rename }}-boot.tar.gz *)
         (cd rootfs && sudo tar cfz /workdir/openwrt/img/${{ inputs.rename }}-rootfs.tar.gz *)
         echo "PACKAGED_OUTPUTTAGS=${{ inputs.rename }}" >> ${GITHUB_ENV}
-        echo "PACKAGED_OUTPUTPATH=${PWD}/img" >> ${GITHUB_ENV}
+        echo "PACKAGED_OUTPUTPATH=/workdir/openwrt/img" >> ${GITHUB_ENV}
         echo "PACKAGED_OUTPUTDATE=$(date +"%m.%d.%H%M")" >> ${GITHUB_ENV}
         echo "PACKAGED_STATUS=success" >> ${GITHUB_ENV}
 
@@ -112,15 +112,12 @@ jobs:
         name: ${{ inputs.rename }}-rootfs.tar.gz
         path: /workdir/openwrt/img/${{ inputs.rename }}-rootfs.tar.gz
 
-    - name: Upload boot & rootfs to Release
-      uses: ncipollo/release-action@main
+    - name: Upload firmware to release
+      uses: softprops/action-gh-release@v1
       if: ${{ env.PACKAGED_STATUS }} == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag: extract-img
-        artifacts: ${{ env.PACKAGED_OUTPUTPATH }}/*
-        allowUpdates: true
-        removeArtifacts: false
-        replacesArtifacts: true
-        token: ${{ secrets.GITHUB_TOKEN }}
-        body: |
-          boot & rootfs files
+        tag_name: ${{ env.PACKAGED_OUTPUTTAGS }}-${{ env.PACKAGED_OUTPUTDATE }}
+        files: ${{ env.PACKAGED_OUTPUTPATH }}/*
+        body: boot & rootfs
