@@ -126,6 +126,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: extract-img
+        tag_name: ${{ steps.tag.outputs.release_tag }}
         files: ${{ env.PACKAGED_OUTPUTPATH }}/*
         body_path: release.txt
